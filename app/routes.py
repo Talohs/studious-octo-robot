@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
-from app.forms import Signupform, LoginForm
+from app.forms import Signupform, LoginForm, AddressForm
 from app.models import User, Address
 
 @app.route("/")
@@ -62,11 +62,25 @@ def logout():
     flash("You have been logged out", "warning")
     return redirect(url_for('index'))
 
-@app.route('/contacts/<int:contact_id>')
-def get_contact(post_id):
-    # post = Post.query.get_or_404(post_id)
-    post = Address.query.get(post_id)
-    if not post:
-        flash(f"A post with id {post_id} does not exist", "danger")
+# @app.route('/contacts/<int:contact_id>')
+# def get_contact(post_id):
+#     # post = Post.query.get_or_404(post_id)
+#     post = Address.query.get(post_id)
+#     if not post:
+#         flash(f"A post with id {post_id} does not exist", "danger")
+#         return redirect(url_for('index'))
+#     return render_template('post.html', post=post)
+
+@app.route('/create', methods=['Post'])
+def create_address():
+    form = AddressForm()
+    if form.validate_on_submit():
+        first_name = form.first_name.data
+        last_name = form.last_name.data
+        phone_number = form.phone_number.data
+        address = form.address.data
+        new_address = Address(first_name=first_name, last_name=last_name,phone_number=phone_number,address=address)
+        flash(f"{new_address.first_name} {new_address.last_name} has been creat", "succes")
         return redirect(url_for('index'))
-    return render_template('post.html', post=post)
+
+    return render_template('create.html', form=form)

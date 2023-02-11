@@ -19,7 +19,6 @@ class LoginForm(FlaskForm):
 class AddressForm(FlaskForm):
     first_name = StringField('First name', validators=[InputRequired()])
     last_name = StringField('Last Name', validators=[InputRequired()])
-    email = EmailField('Email', validators=[InputRequired()])
     phone_number = StringField('Phone number', validators=[InputRequired()])
     address = StringField('Address', validators=[InputRequired()])
     submit = SubmitField()
