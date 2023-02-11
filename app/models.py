@@ -25,6 +25,16 @@ class User(db.Model):
     def check_password(self, password_guess):
         return check_password_hash(self.password, password_guess)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'email': self.email,
+            'username': self.username,
+            'password': self.password,
+        }
+
 @login.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
@@ -55,3 +65,5 @@ class Address(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    
