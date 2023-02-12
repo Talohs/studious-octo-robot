@@ -62,15 +62,6 @@ def logout():
     flash("You have been logged out", "warning")
     return redirect(url_for('index'))
 
-# @app.route('/contacts/<int:contact_id>')
-# def get_contact(post_id):
-#     # post = Post.query.get_or_404(post_id)
-#     post = Address.query.get(post_id)
-#     if not post:
-#         flash(f"A post with id {post_id} does not exist", "danger")
-#         return redirect(url_for('index'))
-#     return render_template('post.html', post=post)
-
 @app.route('/create', methods=['Post'])
 def create_address():
     form = AddressForm()
@@ -80,7 +71,8 @@ def create_address():
         phone_number = form.phone_number.data
         address = form.address.data
         new_address = Address(first_name=first_name, last_name=last_name,phone_number=phone_number,address=address)
-        flash(f"{new_address.first_name} {new_address.last_name} has been creat", "succes")
+        flash(f"{new_address.first_name} {new_address.last_name}'s has been created", "succes")
         return redirect(url_for('index'))
+
 
     return render_template('create.html', form=form)
