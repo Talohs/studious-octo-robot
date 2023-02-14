@@ -8,6 +8,7 @@ from app.models import User, Address
 def index():
     return render_template('index.html')
 
+
 @app.route("/sign_up", methods=['GET', 'POST'])
 def signup():
     form = Signupform()
@@ -62,17 +63,46 @@ def logout():
     flash("You have been logged out", "warning")
     return redirect(url_for('index'))
 
-@app.route('/create', methods=['Post'])
+@app.route('/create', methods=['GET','Post'])
 def create_address():
     form = AddressForm()
     if form.validate_on_submit():
         first_name = form.first_name.data
         last_name = form.last_name.data
         phone_number = form.phone_number.data
+        email = form.email.data 
         address = form.address.data
-        new_address = Address(first_name=first_name, last_name=last_name,phone_number=phone_number,address=address)
+        new_address = Address(first_name=first_name, last_name=last_name,phone_number=phone_number,email=email, address=address)
         flash(f"{new_address.first_name} {new_address.last_name}'s has been created", "succes")
         return redirect(url_for('index'))
 
 
     return render_template('create.html', form=form)
+
+@app.route('/address/<address_id>/edit')
+@login_required
+def edit_address(address_id):
+    address = Address.query.get(address_id)
+    if not address:
+        flash(f"An address with id {address_id} does not exist", "danger")
+        return redirect(url_for('index'))
+    if address.author != current_user:
+        flash("You do not have permission to edit this post", "danger")
+        return redirect(url_for('index'))
+    form = AddressForm()
+    if form.validate_on_submit():
+        first_name = form.first_name.data
+        last_name = form.last_name.data
+        phone_number = form.phone_number.data
+        email = form.email.data 
+        address = form.address.data
+        new_address = Address(first_name=first_name, last_name=last_name,phone_number=phone_number,email=email, address=address)
+        flash(f"{new_address.first_name} {new_address.last_name}'s has been edited", "succes")
+        return redirect(url_for('index'))
+    if request.method == 'GET':
+        first_name = form.first_name.data
+        last_name = form.last_name.data
+        phone_number = form.phone_number.data
+        email = form.email.data 
+        address = form.address.data
+    return render_template('address.html', first_name=first_name, last_name=last_name, phone_number=phone_number, email=email, address=address)

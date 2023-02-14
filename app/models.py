@@ -44,9 +44,10 @@ class Address(db.Model):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50))
     phone_number = db.Column(db.String)
+    email = db.Column(db.String(50),  nullable=False, unique=True)
     address = db.Column(db.String)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    user_id =db.Column(db.Integer)
+    user_id = db.Column(db.Integer)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -66,4 +67,3 @@ class Address(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    
